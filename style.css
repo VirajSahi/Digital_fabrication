@@ -2,19 +2,38 @@ body {
     font: 20px "Gill Sans", Verdana, sans-serif;
     line-height: 1.8;
     color: #000000;
-    background-color: #dcdcdc;
+    background-color: white;
     padding-top: 0px !important;
   }
 
 .textcontainer {
-  padding: 2% 10%;;
+  padding: 2% 5%;;
 }
 
 p {font-size: 16px;}
 .margin {margin-bottom: 30px;}
 
-a {
-  color: #000000;
+a:link, a:visited 
+
+{
+  color: black;
+  border: 2px solid black;
+  border-radius: 25px;
+  Padding: 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+a:hover, a:active {
+  background-color: black;
+  color: white;
+  border: 2px solid black;
+  border-radius: 25px;
+  Padding: 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
 }
 
 .container-fluid {
@@ -23,9 +42,9 @@ a {
 }
 
 nav {
-  background-color: #dcdcdc;
+  background-color: #d9be98;
   color: #EEE7E8;
-  padding: 50px 0px;
+  padding: 100px 0px;
 }
 
 .navbar-nav {
