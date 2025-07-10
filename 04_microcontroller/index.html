@@ -1,35 +1,398 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<head>
 <title>PS70: Intro to Digital Fabrication </title>
+ <meta charset="UTF-8">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="../style.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/arduino-light.min.css" rel="stylesheet">
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
 
-<nav class="navbar navbar-expand-sm navbar-dark" style=" color: #EEE7E8;">
+  <style>
+    pre code {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+  </style>
+
+<nav class="navbar navbar-expand-sm navbar-dark">
   <div style="align-items: center; justify-content: center;" class="container-fluid">
     <div class="flexrow">
-      <h2 class="nav-title">PS70 Fall 2024</h2>
+      <h2 class="nav-title">PHYS Viraj 2025</h2>
     </div>
     <div class="navbar-nav">
-      <h4><a class="nav-link" href="../index.html">Home</a></h4>
-      <h4><a class="nav-link" href="../about.html">About</a></h4>
+      <h4><a href="../index.html">Home</a></h4>
+      <h4><a href="../about.html">About</a></h4>
     </div>
   </div>
 </nav>
+
+</head>
 
 <body>
 <xmp style="display:none;">
 <div class="textcontainer">
 <p class="margin">   </p>
 
-<h3>Week 4: Microcontroller Programming</h3>
+<h3>Week 4: Microcontroller Programming</h3><br>
 
-<h4>[Do Something with an arduino]</h4>
+<h4 style="text-align:center"><u>Intro</u><h4>
+<h5>I particularly enjoyed this week's assignment. As someone who's never coded or touched a circuit before, and whose expertise with solving tech-related problems is limited to angrily turning off and on power buttons, Arduino was challenging, yet fun. My aim was to program the microcontroller to use in my kinetic sculpture. I wanted to have lights behind the apple whose brightness increases as the hand approaches it. These were the components I wanted:<h5>
+<ul>
+  <li>On/off toggle controlled by a button</li>
+  <li>Sensor detecting the distance from the hand to the apple and printing the distance</li>
+  <li>Lights adjusting brightness based on the detected distance</li>
+  <li>Motor spinning simultaneously while the above functions operate</li>
+</ul>
+<h5>This also has applications in my final project, as I need to use a sensor to detect the amount of wast (judged by distance from the top of the pile to the lid of the collecting tin, and send an output in the form of a text message once that distance is crossed.
+</h5><br>
 
 
+<h4 style="text-align:center"><u>Initial distance sensor</u><h4>
+<h5>My first step was making a distance sensor using the HC-SRO4 and having it print out the speed. Initially, it was only printing one distance: 0.93. However, after some rewiring and switching of parts, it worked! This is my code:</h5>
+<pre><code class="cpp">
+const int trigPin = 19;
+const int echoPin = 18;
+
+unsigned long lastSensing = 0;
+const unsigned long timeInterval = 100;
+
+float duration, distance;
+
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  Serial.begin(9600);
+}
+
+void loop() {  
+  digitalWrite(trigPin, LOW);  
+  delayMicroseconds(2);  
+  digitalWrite(trigPin, HIGH);  
+  delayMicroseconds(10);  
+  digitalWrite(trigPin, LOW);  
+
+duration = pulseIn(echoPin, HIGH);  
+distance = (duration*.0343)/2;  
+Serial.print("Distance: ");  
+  Serial.println(distance);  
+  delay(100);  
+}  
+</code></pre>
+<br>
+
+<h5>This is a photo of my wiring:</h5>
+<img src="Distance_1.jpg" alt="Fusion Sketch image" width="80%"><br>
+
+<h5>I then edited my code to replace the delay(100) statement:</h5>
+
+<pre><code class="cpp">
+void loop() {
+  if (millis() - lastSensing >= timeInterval) {
+    lastSensing = millis();
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(2);
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
+  }
+}
+</code></pre><br>
+
+<h4 style="text-align:center"><u>Adding LEDs</u><h4>
+<h5>To control brightness, I had to choose between adjusting the electrical input towards all the LEDs to make them fad/brighten versus turning on/off a few of them individually. I chose the former, since I thought it would lead to a smoother fade. I started with the code for just one: <h5>
+
+<pre><code class="cpp">
+const int trigPin = 19;
+const int echoPin = 18;
+
+const int ledPin = 9;
+const int freq = 5000;
+const int pwmChannel = 0;
+const int resolution = 8;
+
+unsigned long lastSensing = 0;
+const unsigned long timeInterval = 100;
+
+float duration, distance;
+int ledVal;
+
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  pinMode(ledPin, OUTPUT);
+  ledcAttach(ledPin, freq, resolution);
+
+  Serial.begin(9600);
+}
+
+void loop() {
+  if (millis() - lastSensing >= timeInterval) {
+    lastSensing = millis();
+
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(2);
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
+
+    duration = pulseIn(echoPin, HIGH);
+    distance = (duration * 0.0343) / 2;
+
+    ledVal = map(distance, 5, 40, 255, 0);
+    ledVal = constrain(ledVal, 0, 255);
+    ledcWrite(ledPin, ledVal);
+
+    Serial.print("Distance: ");
+    Serial.print(distance);
+    Serial.println(" cm");
+  }
+}
+</code></pre>
+
+<h5>This worked! WOohoOOo!!! I then remade it to allow for 6 LEDs by replacing a single ledPin with the array ledPins[], and using a 'for' loop to control brightness based on the mapped distance:<h5>
+
+  <pre><code class="cpp">
+#include &lt;Arduino.h&gt;
+
+const int trigPin = 19;
+const int echoPin = 18;
+
+const int ledPins[] = {9, 8, 7, 6, 5, 4};
+const int pwmChannels[] = {0, 1, 2, 3, 4, 5};
+
+const int freq = 5000;
+const int resolution = 8;
+
+unsigned long lastSensing = 0;
+const unsigned long timeInterval = 100;
+
+float duration, distance;
+int ledVal;
+
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  Serial.begin(9600);
+
+  for (int i = 0; i < 6; i++) {
+    pinMode(ledPins[i], OUTPUT);
+  }
+}
+
+void loop() {
+  if (millis() - lastSensing >= timeInterval) {
+    lastSensing = millis();
+
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(2);
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
+
+    duration = pulseIn(echoPin, HIGH);
+    distance = (duration * 0.0343) / 2;
+
+    ledVal = map(distance, 5, 20, 255, 0);
+    ledVal = constrain(ledVal, 0, 255);
+
+    for (int i = 0; i < 6; i++) {
+      analogWrite(ledPins[i], ledVal);
+    }
+
+    Serial.print("Distance: ");
+    Serial.print(distance);
+    Serial.println(" cm");
+  }
+}
+</code></pre>
+
+<h5>Here's a video of it working!</h5>
+<video src="VID_20250710_082514115.mp4" autoplay loop muted playsinline style="width: 100%; height: auto;"></video><br>
+
+<h4 style="text-align:center"><u>Button</u><h4>
+<h5>For perks, I tried adding a button to turn on/off the entire system. However, it wasn't working, and the LEDs weren't turning on, so I tried to diagnose the problem by printing statements to see where the issue lay. Here is my code for the button, plus the print statements:<h5>
+
+  <pre><code class="cpp">
+  #include <Arduino.h>
+const int trigPin = 19;
+const int echoPin = 18;
+
+const int ledPins[] = { 9, 8, 7, 6, 5, 4 };
+const int pwmChannels[] = { 0, 1, 2, 3, 4, 5 };
+
+const int freq = 5000;
+const int resolution = 8;
+
+unsigned long lastSensing = 0;
+const unsigned long timeInterval = 100;
+
+float duration, distance;
+int ledVal;
+
+const int buttonPin = 3;
+bool systemOn = false;        // Tracks if system is on or off
+bool lastButtonState = HIGH;  // Button released state (pull-up HIGH)
+unsigned long lastDebounceTime = 0;
+const unsigned long debounceDelay = 50;
+
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  Serial.begin(115200);
+
+  for (int i = 0; i < 6; i++) {
+    pinMode(ledPins[i], OUTPUT);
+  }
+
+  pinMode(buttonPin, INPUT_PULLUP);
+}
+
+void loop() {
+  bool reading = digitalRead(buttonPin);
+  if (reading != lastButtonState) {
+    lastDebounceTime = millis();
+  }
+
+  if ((millis() - lastDebounceTime) > debounceDelay) {
+Serial.print("lbs: ");
+Serial.println(lastButtonState);
+Serial.print("reading: ");
+Serial.println(reading);
+    if (lastButtonState == HIGH && reading == LOW) {
+      Serial.println("Wassup");
+      systemOn = !systemOn;
+      Serial.println(systemOn ? "System ON" : "System OFF");
+    }
+  }
+  lastButtonState = reading;
+
+  if (systemOn) {
+    if (millis() - lastSensing >= timeInterval) {
+      lastSensing = millis();
+      digitalWrite(trigPin, LOW);
+      delayMicroseconds(2);
+      digitalWrite(trigPin, HIGH);
+      delayMicroseconds(10);
+      digitalWrite(trigPin, LOW);
+
+      duration = pulseIn(echoPin, HIGH);
+      distance = (duration * .0343) / 2;
+      ledVal = map(distance, 5, 20, 255, 0);
+      ledVal = constrain(ledVal, 0, 255);
+
+      for (int i = 0; i < 6; i++) {
+        analogWrite(ledPins[i], ledVal);
+      }
+    }
+  }
+
+  else {
+    // System OFF - turn all LEDs off
+    for (int i = 0; i < 6; i++) {
+      analogWrite(ledPins[i], 0);
+    }
+  }
+}
+</code></pre>
+
+<h5>This didn't really work. :(. I also tried wiring a OLED screen, which didn't work either:</h5>
+
+  <pre><code class="cpp">
+#include <Arduino.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+
+const int trigPin = 19;  
+const int echoPin = 18; 
+
+const int ledPins[] = {9, 8, 7, 6, 5, 4};
+const int pwmChannels[] = {0, 1, 2, 3, 4, 5};
+
+const int freq = 5000;
+const int resolution = 8;
+
+unsigned long lastSensing = 0;
+const unsigned long timeInterval = 100;
+
+float duration, distance; 
+int ledVal;
+
+void setup() {  
+  pinMode(trigPin, OUTPUT);  
+  pinMode(echoPin, INPUT);
+  
+  Serial.begin(9600);  
+
+for (int i = 0; i < 6; i++) {
+    pinMode(ledPins[i], OUTPUT);
+  }
+
+  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+  Serial.println(F("SSD1306 allocation failed"));
+  for (;;);
+}
+display.clearDisplay();
+display.setTextSize(2);
+display.setTextColor(SSD1306_WHITE);
+}
+
+void loop() {  
+  if (millis() - lastSensing >= timeInterval) {
+    lastSensing = millis();
+  digitalWrite(trigPin, LOW);  
+  delayMicroseconds(2);  
+  digitalWrite(trigPin, HIGH);  
+  delayMicroseconds(10);  
+  digitalWrite(trigPin, LOW);  
+
+duration = pulseIn(echoPin, HIGH);  
+distance = (duration*.0343)/2;  
+ledVal = map(distance, 5, 20, 255, 0);
+  ledVal = constrain(ledVal, 0, 255);
+
+  for (int i=0; i<6; i++) {
+    analogWrite(ledPins[i], ledVal);
+  }
+
+Serial.print("Distance: ");  
+  Serial.print(distance);  
+  Serial.println(" cm");
+}  
+
+display.clearDisplay();
+    display.setTextSize(2);
+    display.setTextColor(SSD1306_WHITE);
+    
+    if (distance < 10) {
+      display.setCursor(0, 10);
+      display.println("Nearly");
+      display.setCursor(0, 30);
+      display.println("there!");
+    } else {
+      display.setCursor(0, 20);
+      display.println("Too far!");
+    }
+
+    display.display();
+  }
+}
+}
+</code></pre>
 
 
+<h4 style="text-align:center"><u>Other things</u><h4>
+<h5> I tried a few things in addition to this: I tried to wire in a motor with a potentiometer, but it drew too much voltage and rotated too haltingly, so I had to unplug it. I later did manage to simultaneously spin the motor, but without the potentiometer. That's all!<h5>
 
 </div>
 </xmp>
