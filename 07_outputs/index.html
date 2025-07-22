@@ -50,7 +50,6 @@
   <li>Wired and coded a <b>ultrasonic sensor, screen, and reset button</b></li>
   <li>Created <b>cases</b> for the components and <b>stands/mounts</b> load cells</li>
   <li>Prototyped and worked on my <b>water wheel</b> (to power the sensor)</li>
-  <li>Ideated for how the sensors will finally be powered</li>
 </ul><br>
 
 
@@ -58,7 +57,7 @@
   <h4 style="text-align:center"><u>Velostat Weight Sensors</u><h4><br>
 
 <h5>
-    I mistakenly thought that the lab was out of load sensors, so I set out to make one of my own. I layered Velostat between two pieces of cardboard lined with parallel copper strips. Pressing on the mat caused the resistance to drop. I measured this using the laboratory DC power supply, observing an increase in current as I increased weight/pressure on the sensor. <br><br>
+    I mistakenly thought that the lab was out of load sensors, so I set out to create a makeshift one myself. I layered Velostat between two pieces of cardboard lined with parallel copper strips. Pressing on the mat caused the resistance to drop. I measured this using the laboratory DC power supply, tracking the increase in current against increased weight/pressure on the sensor. <br><br>
 
     During assembly, I struggled with the copper tape’s strong adhesive, which blocked conductivity when placed  on the velostat. My solution was to lay the copper tape with the non-sticky side down and then secure it in place with cloth tape. Below are photos and videos of my 2 prototypes, along with the materials used to make them:
 </h5><br>
@@ -102,7 +101,7 @@
 <h4 style="text-align:center"><u>Load Cell Sensors</u><h4><br>
 
 <h5>
-    The next thing I did was wire and configure load sensors to measure the weight. I used 4 SparkFun 50 kg load cells - one at each corner of the board on which the bin rests, so that the weight is distributed evenly. These were wired through an HX711 amplifier to an ESP32 microcontroller. Although the HX711 website recommended a load Cell Combinator board to connect the amplifier to the sensors, the lab didn’t have one, so I manually wired the four load cells on a breadboard in a Wheatstone bridge configuration to replicate the combinator’s function (this took 2-3 hours, with help from Bobby). Here are some photos below:
+    The next thing I did was wire and configure load sensors to measure the weight. I used 4 SparkFun 50 kg load cells - one at each corner of the board on which the bin rests, so that the weight is distributed evenly. These were wired through an HX711 amplifier to an ESP32 microcontroller. Although the HX711 website recommended a load Cell Combinator board to connect the amplifier to the sensors, the lab didn’t have one, so I manually wired the four load cells on a breadboard in a Wheatstone bridge configuration to replicate the combinator’s function (this took 2-3 hours, with some much-needed help from Bobby). Here are some photos below:
 </h5><br>
      
 <div style="display: flex; gap: 10px; align-items: stretch;">
@@ -157,9 +156,9 @@ Final setup photos:<b></h5>
 <div style="display: flex; gap: 10px; align-items: stretch;">
   <img src="WeightSetup1.jpg" alt="Description" 
        style="height: 360px; width: auto; object-fit: contain;"/>
-  <img src="WeightSetup2.jpg" alt="Description" 
-       style="height: 360px; width: auto; object-fit: contain;"/>
   <img src="WeightSetup3.jpg" alt="Description" 
+       style="height: 360px; width: auto; object-fit: contain;"/>
+  <img src="WeightSetup2.jpg" alt="Description" 
        style="height: 360px; width: auto; object-fit: contain;"/>
   <img src="WeightSetup4.jpg" alt="Description" 
        style="height: 360px; width: auto; object-fit: contain;"/>
@@ -235,6 +234,9 @@ void loop() {
 
 <img src="CalibrationTable1.png" alt="Description" style=" width: 100%; height: auto; object-fit: contain;"/><br><br>
 <img src="CalibrationTable2.png" alt="Description" style=" width: 100%; height: auto; object-fit: contain;"/><br><br>
+<h5><a href='https://docs.google.com/spreadsheets/d/1kDFuQ9lAUT3kbE04K-puqO5N5k8gLyG8nLfo6ECp_ls/edit?usp=sharing' target="blank">See this table</a></h5>
+<br>
+
 
 <div style="display: flex; gap: 10px; align-items: stretch;">
     <img src="Redline.png" alt="Description" 
@@ -280,7 +282,7 @@ void loop() {
 <h4 style="text-align:center"><u>Ultrasonic sensor, screen, and button</u><h4><br>
 
 <h5>
-    Next, I created a sensor to report on how full the bin is, using an ultrasonic sensor that measures distance from the lid to the top of the waste pile. I wired an OLED to show these values as percentage alerts: showing when the bin was 70%, 80%, and 90% full. After the 90% alert, the user must manually reset the system (and empty the trash in the process) - the reset can happen either through pressing the button or typing 'reset' into the serial monitor. In the future, I hope to send these alerts as SMS messages using a GSM module and  SIM card. I also want to integrate the weight sensor into this code, so that it too can generate eroor messages. Below is a video of the system and a copy of the code.
+    Next, I created a sensor to report on how full the bin is, using an ultrasonic sensor that measures distance from the lid to the top of the waste pile. I wired an OLED to show these values as percentage alerts: showing when the bin was 70%, 80%, and 90% full. After the 90% alert, the user must manually reset the system (and empty the trash in the process) - the reset can happen either through pressing the button or typing 'reset' into the serial monitor. In the future, I hope to send these alerts as SMS messages using a GSM module and  SIM card. I also want to integrate the weight sensor into this code, so that it too can generate error messages. Below is a video of the system and a copy of the code.
 </h5><br>
 
 
@@ -418,7 +420,7 @@ Final setup photos:<b></h5>
 <h4 style="text-align:center"><u>Water Wheel</u><h4><br>
 
 <h5>
-    Lastly, I modeled my water wheel. My plan is to attach half-cut soda cans to the rim of the bicycle wheel to make it spin. I wanted to test the 3 possible configurations of the soda cans to see which one spins fastest. I found that wheel number spun the fastest. Now, all that's left is attaching the cans to wheel in real life (I alreadys stripped the tyre of rubber). Here are images/videos of the 3 models:
+    Lastly, I modeled my water wheel. My plan is to attach half-cut soda cans to the rim of the bicycle wheel to make it spin. I wanted to test the 3 possible configurations of the soda cans to see which one spins fastest. I found that <b>wheel number 1</b> (with the extruded cans) spun the fastest. Now, all that's left is attaching the cans to wheel in real life (I already stripped the tyre of rubber). Here are images/videos of the 3 models:
 </h5><br>
 
 <div style="display: flex; gap: 10px; align-items: stretch;">
@@ -428,7 +430,20 @@ Final setup photos:<b></h5>
        style="height: 400px; width: auto; object-fit: contain;"/>
   <img src="WaterWheel3.png" alt="Description" 
        style="height: 400px; width: auto; object-fit: contain;"/>
-</div><br><br><br>
+</div><br>
+
+<div style="display: flex; gap: 10px; align-items: stretch;">
+  <video src="WWheel2.mp4" autoplay loop muted playsinline 
+         style="height: 700px; width: auto; object-fit: contain; border: 1px solid #ccc;"></video>
+  <video src="WWheel1.mp4" autoplay loop muted playsinline 
+         style="height: 700px; width: auto; object-fit: contain; border: 1px solid #ccc;"></video>
+  <video src="WWheel3.mp4" autoplay loop muted playsinline 
+         style="height: 700px; width: auto; object-fit: contain; border: 1px solid #ccc;"></video>
+</div><br>
+
+<h5><b>
+    And that's about all!</b>
+</h5><br><br>
 
 
 </div>
