@@ -104,7 +104,7 @@ void loop() {
 <div style="display: flex; align-items: flex-start; gap: 20px;">
   <div style="flex: 1;">
     <h5>
-      The setup for this sensor was the same as the first (code, wiring, etc.). However, instead of moving the magnet, I tried to increase its field strength from a fixed distance. I did this by positioning a small neodymium magnet 1 inch away from the sensor, and pogressively adding more magnets at the back. I tested for a range of 0 to 28, sampling each instance 35 times. I calculated and graphed the mean and uncertainty for these instances and fitted it onto an asymptotic exponential growth curve, with a correlation of 0.998! Here, the equation to convert readings on the serial monitor into number of magnets was: <b>n = (−1 / 0.06662) × ln(1 − (M − 35490) / 1867)</b>, where n is the number of magnets and M is the reading.
+      The setup for this sensor was the same as the first (code, wiring, etc.). However, instead of moving the magnet, I tried to increase its field strength from a fixed distance. I did this by positioning a small neodymium magnet 1 inch away from the sensor, and pogressively adding more magnets at the back. Similar to the previous, I sampled each instance 35 times, from a range of 1 to 28 magnets. I calculated and graphed the mean and uncertainty for each instance, and fitted it to an asymptotic exponential growth curve, with a correlation of 0.998! Here, the equation to convert readings on the serial monitor into number of magnets was: <b>n = (−1 / 0.06662) × ln(1 − (M − 35490) / 1867)</b>, where n is the number of magnets and M is the reading.
     </h5>
   </div>
   <div style="flex: 1;">
@@ -151,7 +151,7 @@ void loop() {
 <br>
 
  <h5>
-      I measured the capacitance value (outputted by the Serial Monitor) from a range of distance of 1 inch to 24 inches, at increments of 1 inch. At each position, I sampled 35 values, found their mean and uncertainty, and graphed them against a fitted exponential growth curve. The correlation was 0.9895, and the relationship between distance (D) and reading (R) was <b>R = 5.953e4 * (1 - exp(-0.1107 * D)) + C</b>. The graph has a strange shape: until a distance of 15 inches, it followed a rough linear path. However, after this, it began plateuing into an asymptote. I think the reason for these inconsistencies was the environment - I set this up in the lab, where everything from a charging cable to my plastic ruler changed the values. If I had done this in a controlled environment, I believe I would have gotten a smoother curve:</h5><br>
+      I measured the capacitance value (outputted by the Serial Monitor) from a range of distance of 1 inch to 24 inches, at increments of 1 inch. At each instance, I sampled 35 values, found their mean and uncertainty, and graphed them against a fitted exponential growth curve. The correlation was 0.9895, and the relationship between distance (D) and reading (R) was <b>R = 5.953e4 * (1 - exp(-0.1107 * D)) + C</b>. The graph has a strange shape: until a distance of 15 inches, it followed a  linear path. However, after this, it began plateuing into an asymptote. I think the reason for these inconsistencies was the environment - I set this up in the lab, where everything from a charging cable to my hand changed the values. If I had done this in a controlled environment, I believe I would have gotten a smoother curve:</h5><br>
 
 
 <img src="Capacitor1a.png" alt="Description" style="width: 100%; height: auto;"><br><br>
@@ -168,7 +168,7 @@ void loop() {
 <div style="display: flex; align-items: flex-start; gap: 20px;">
   <div style="flex: 1;">
     <h5>
-      The salinity sensor worked on the same code as the distance sensor before: only that the electrodes were now fastened to opposite sides of a plastic cup that was filled with a salt solution. I made 13 solutions ranging from pure water to a solution with 6mL (7.3g) of dissolved salt, increasing salt concentration by increments of 0.5 mL (0.6g) (measured via pipette). To the right are two photos of the setup. I sampled 75 values for each solution, found their mean and absolute uncertainty, and plotted them. However, my graph was strange - decreasing exponentially until a salt concentration of 3.5 mL, then increasing. I had only expected it to decrease, as salt's higher conductivity results in faster voltage equalization and a weakening of capacitive coupling. My hypothesis for the sudden u-turn is that my solution became saturated, and further adding salt increased its volume while only marginally changing its capacitance, resulting in the values increasing. Due to the U-shape, I fitted the points against a quadratic curve.
+      The salinity sensor worked on the same code as the distance sensor before: only that the electrodes were now fastened to opposite sides of a plastic cup that was filled with a salt solution. I made 13 solutions ranging from pure water to a solution with 6mL (7.3g) of dissolved salt, increasing salt concentration by increments of 0.5 mL (0.6g) (measured via pipette). To the right are two photos of the setup. I sampled 75 values for each solution, found their mean and absolute value, and plotted them. However, my graph was incredible strange - decreasing exponentially until a salt concentration of 3.5 mL, then increasing. I had only expected it to decrease, as salt's higher conductivity results in faster voltage equalization and a weakening of capacitive coupling. My hypothesis for the sudden u-turn is that my solution became saturated, and further adding salt increased its volume while only marginally changing its capacitance, resulting in the values increasing. Due to the U-shape, I fitted the points against a quadratic curve.
     </h5>
   </div>
   <div style="flex: 1;">
@@ -182,7 +182,7 @@ void loop() {
 <img src="Salinitydetect3.png" alt="Description" style="width: 100%; height: auto;"><br><br>
 <h5>
 
-<h5><a href='https://docs.google.com/spreadsheets/d/1zrKB5sUlNs3MzzoF9QIuhYZdZjTOSFanp7X395SgjiY/edit?usp=sharing' target="blank">See table</a></h5>
+<h5><a href='hhttps://docs.google.com/spreadsheets/d/1zrKB5sUlNs3MzzoF9QIuhYZdZjTOSFanp7X395SgjiY/edit?usp=sharing' target="blank">See table</a></h5>
 <h5><a download href='./Salinity Detector.CMBL'>See graph</a></h5><br>
 
 
@@ -284,7 +284,7 @@ String detectFruit(long val) {
 <video src="FruitTest.mp4" autoplay loop muted playsinline style="width: 100%; height: auto; border: 1px solid #ccc;"></video><br>
 
 <h5>
-   While the Fruit Finder could differentiate the apple and zucchini immediately, the in-between values of the kiwi, pear and banana made them difficult to identify, as their ranges overlap in real life. I'd have to increase my electrodes' sensitivity in order to differentiate better. That's about it!
+   While the Fruit Finder could differentiate the appla nd zucchini immediately, the in-between values of the apple, pear and banana made them difficult to identify, as their ranges aren't actually discrete in real life. I'd have to increace my electrodes' sensitivity in order to differentiate better. And that's about it!
     </h5><br>
 
 
