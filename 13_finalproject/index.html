@@ -1,36 +1,216 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<title>PS70: Intro to Digital Fabrication </title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="../style.css" rel="stylesheet">
+<head>
+  <title>PS70: Intro to Digital Fabrication</title>
+  <meta charset="UTF-8">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../style.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/arduino-light.min.css" rel="stylesheet">
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
 
-<nav class="navbar navbar-expand-sm navbar-dark" style=" color: #EEE7E8;">
-  <div style="align-items: center; justify-content: center;" class="container-fluid">
-    <div class="flexrow">
-      <h2 class="nav-title">PS70 Fall 2024</h2>
+  <style>
+    pre code {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .tab-wrapper {
+      max-width: 1000px;
+      margin: auto;
+    }
+    .nav-tabs {
+      justify-content: center;
+    }
+    .tab-content {
+      padding: 20px;
+      border: 1px solid #dee2e6;
+      border-top: none;
+      background-color: #f9f9f9;
+      border-radius: 0 0 8px 8px;
+    }
+  </style>
+
+  <nav class="navbar navbar-expand-sm navbar-dark">
+    <div style="align-items: center; justify-content: center;" class="container-fluid">
+      <div class="flexrow">
+        <h2 class="nav-title">PHYS Viraj 2025</h2>
+      </div>
+      <div class="navbar-nav">
+        <h4><a href="../index.html">Home</a></h4>
+        <h4><a href="../about.html">About</a></h4>
+      </div>
     </div>
-    <div class="navbar-nav">
-      <h4><a class="nav-link" href="../index.html">Home</a></h4>
-      <h4><a class="nav-link" href="../about.html">About</a></h4>
-    </div>
-  </div>
-</nav>
+  </nav>
+</head>
 
 <body>
-<xmp style="display:none;">
+  <xmp style="display:none;">
 <div class="textcontainer">
 <p class="margin"></p>
 
-<h3>Final Project: [INSERT FINAL PROJECT HERE]</h3>
+<h3>Final Project:</h3>
 
+<h4 style="text-align:center"><u>The problem</u></h4><br>
+<div style="display: flex; align-items: flex-start; gap: 20px;">
+
+  <div style="flex: 1;">
+    <h5>
+      In my hometown -<b> Punjab, India </b>- I constantly observe a complicated, culturally-rooted environmental issue: 
+      <b>religious river pollution.</b> Every year, 8 million tonnes of waste enter Indian rivers, a byproduct of household Hindu rituals. 
+      The waste includes pesticide-ridden fruits and flowers, plaster idols with lead paint, incense sticks, plastic, and more. 
+      People immerse these in rivers by the thousands to show their faith. 
+      The result – leaching toxins that cause Cancer, Hepatitis, and Dysentery in local communities, 
+      together constituting the leading cause of child mortality in India, as well as eutrophication 
+      and environmental harm.
+      <br><br>
+      When I was thirteen, I began visiting the riverbank every week, collecting two sacksful of trash. 
+      Over the years, people began to take notice, and our ranks rose to over 30 volunteers: 
+      this became Ghaggar Toli, a youth-led initiative to clean the Ghaggar River. 
+      We’ve collected over 16 tonnes of waste and conducted over 50 cleanups, working with schools, residential communities, NGOs, 
+      and the municipal government. However, <b>I can’t keep up with the trash</b>. 
+      It’s frustrating and demoralising to clean the river, only to find it relapse to its polluted state the next day.
+    </h5>
+  </div>
+
+  <div style="flex: 0 0 300px;">
+    <img src="river_poll1.jpg" alt="Ghaggar River Cleanup" style="width: 480px; height: auto; border-radius: 8px;">
+  </div>
+</div>
+
+<h4 style="text-align:center"><u>The Solution</u></h4><br>
+
+<h5>
+My dream for Ghaggar Toli is to automate waste collection. That’s why I invented <b>Riverse:</b> a river-cleaning device to collect floating garbage before it leaches toxins. Riverse collects garbage through a 4-step process. First, it funnels floating waste towards the mouth of the collector using a trash boom barrier. Second, it rakes the trash to a coveyor belt, raising it out of contact with water. Third, it collects the waste in a bin and measures its volume and weight, sending SMS alerts for whe the bin is full. Fourth, it uses water wheels to power electronics and moving components, rendering the system cheaper, more robust, and energetically efficient. Here's my final project video:
+</h5><br>
+
+<video width="930" height="523" controls autoplay loop>
+  <source src="Final project.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+<a href="Final project.mp4" download style="padding:10px 15px; background-color:#007BFF; color:white; text-decoration:none; border-radius:5px;">
+    ⬇ Download Final Project Video
+</a><br><br>
+
+
+<h4 style="text-align:center"><u>My Process</u></h4><br>
+
+<h5>
+During the final week, I attempted to prototype the reverse system by building the following components: <b>(Click on the tabs to view):</b>
+</h5><br>
+
+<div class="tab-wrapper">
+  <ul class="nav nav-tabs" id="projectTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active fw-bold" id="small-prototype-tab" data-bs-toggle="tab" data-bs-target="#small-prototype" type="button" role="tab">Small Prototype</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link fw-bold" id="conveyor-belt-tab" data-bs-toggle="tab" data-bs-target="#conveyor-belt" type="button" role="tab">Conveyor Belt</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link fw-bold" id="wheel-gears-tab" data-bs-toggle="tab" data-bs-target="#wheel-gears" type="button" role="tab">Wheel & Gears</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link fw-bold" id="rakes-tab" data-bs-toggle="tab" data-bs-target="#rakes" type="button" role="tab">Rakes</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link fw-bold" id="mvp-tab" data-bs-toggle="tab" data-bs-target="#mvp" type="button" role="tab">Improved MVP</button>
+    </li>
+  </ul>
+
+<div class="tab-content mt-3" id="projectTabsContent">
+  <div class="tab-pane fade show active" id="small-prototype" role="tabpanel">
+    <h5>
+     First, I created a small prototype of scale 1:11 to simulate the coveyor belt and water wheel. I used wooden rods for the rollers and 3D-printed parts for the chassis and stands, which I designed on Fusion 360. I wanted to avoid relying on friction alone to move the belt, as it could be faulty in water, so I wrapped strips of a teethed belt around the pins, tying the ends with fishing wire before supergluing them in place. I then glued 2 longer teethed belts to a piece of plastic acting as a coveyor belt, finally wrapped it onto the chassis. I used 2 metal gears to connect the head pulley to the water wheel, configuring the belt so that clockwise motion on the wheel would result in anticlockwise motion on the pulley. Lastly, I screwed all the components onto a wooden board using M4s. Here are photos of the process and result:
+    </h5>
+
+
+  <img src="IMG_20250803_183637870_HDR.jpg" alt="Image 1" style="max-width: 30%; height: auto;">
+  <img src="IMG_20250803_190731596_HDR.jpg" style="max-width: 30%; height: auto;">
+  <img src="IMG_20250803_204032167_HDR.jpg" alt="Image 3" style="max-width: 30%; height: auto;"><br>
+
+  <img src="IMG_20250803_183754085.jpg" alt="Image 1" style="max-width: 45.2%; height: auto;">
+  <img src="IMG_20250803_204215151_HDR.jpg" style="max-width: 45.2%; height: auto;"><br>
+
+  </div>
+
+  <div class="tab-pane fade" id="conveyor-belt" role="tabpanel">
+    <h5>
+      Next, I created the coveyor belt. Since I was working with pvc pipes as roller pins, I 3D-printed cap which could fit onto the pipe’s end, secured with a M5x50 screw, with an embedded M8 lock nut at the tip. The lock nut screwed into a rotary bearing, whose housing I also desiged and 3d-printed. When connected at both sides, this created a smoothly rotating pulley. I created 5 of these to span the coveyor bed. I chose not to opt for a slider bed, as the friction could have interfered with the belt’s rotation. 
+
+      <br><br>I didn’t want to waste wood or metal to create a chassis, so I opted to create equally spaced stands for each PVC-pin, at heights ranging from 50 to 210mm, (Increments of 40mm), across a lenght of 400mm. I had originally wanted to 3d prit these stands; however, I realised I could lasercut them instead while retaining stability. I attached the bearings to these stands and created a makeshift conveyor. Initially, the stands shifted around when the pulleys rotated, so I had to lasercut a base on which they could be slotted in and glued. Lastly, I created a belt by stitchig together various plastics. Below are 2D designs for the stands and base and media of the  conveyor:
+    </h5>
+
+  <img src="Stands.png" alt="Image 1" style="max-width: 45.2%; height: auto;">
+  <img src="Base.png" style="max-width: 45.2%; height: auto;"><br>
+
+  <img src="IMG_20250808_154223892.jpg" alt="Image 1" style="max-width: 45.2%; height: auto;">
+  <img src="IMG_20250808_154835721.jpg" style="max-width: 45.2%; height: auto;"><br>
+
+   <video width="870" height="530" controls>
+  <source src="VID_20250808_112403544.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+
+  </div>
+
+  <div class="tab-pane fade" id="wheel-gears" role="tabpanel">
+    <h5>
+      I used a bicycle wheel to make my water wheel. I planned to attach half-cut coke cans to the rim to make it spin (see more in MCP week). To costruct this in real life, I planned to drill the coke cans on directly; however, the rim was impossible to drill or tap. Hence, I designed a 3D-printed bit that could fit onto the wheel snugly, tighten via screw, and attach to a can. After numerous iterations, it worked! I printed these en masse, attached 16 of them to each wheel, and finally cut, cleaned, and screwed on the aluminium cans.
+    <br><br>
+      Next, I designed 2 gears: one that fit onto the driver pulley of the conveyor, and another that attached to the water wheel. I made the gear ratio 1:5, so that the gently spiing water wheel could result in a high RPM for the pulley. I then 3D-printed a chain that attached both gears. I learnt too late that 3D-printed belts are incredibly finicky, so this did not end up working. Below is the Can-holder design, photos of the wheel, and media related to the gear and belt design.
+    </h5>
+
+
+  <img src="IMG_20250808_160359921.jpg" alt="Image 1" style="max-width: 30%; height: auto;">
+  <img src="IMG_20250808_104053628_HDR.jpg" alt="Image 1" style="max-width: 30%; height: auto;">
+  <img src="IMG_20250808_104339282.jpg" style="max-width: 30%; height: auto;"><br>
+  
+  <img src="IMG_20250808_160315679.jpg" alt="Image 1" style="max-width: 45.2%; height: auto;">
+  <img src="IMG_20250808_112742545_HDR.jpg" style="max-width: 45.2%; height: auto;"><br>
+ </div>
+
+
+  <div class="tab-pane fade" id="rakes" role="tabpanel">
+
+    <h5>
+      Next, I created a rake to scoop trash onto the water wheel. This was a bit of a failure, as it used the same 3d-printed chain and gear design as previously stated. The small gears in the rake system prevented the chain from rotating smoothly. Nonetheless, I lasercut 6 rakes from wood, along with attaching other, thin steps of wood to stabilise the chain, fitted into a modified chain with housing for the rakes. Below is media related to the rake:
+    </h5>
+
+
+  <img src="Rake1design.png" alt="Image 1" style="max-width: 45.2%; height: auto;">
+  <img src="Rake2design.png" style="max-width: 45.2%; height: auto;"><br>
+ </div>
+
+
+  <div class="tab-pane fade" id="mvp" role="tabpanel">
+
+    <h5>
+  Lastly, I improved upon my MVP, (the distace ad volume sensing collection bin). I attached a GSM module and 3.7V power supply so that the bin could send an SMS to me every time it was full. I also coded it so that if I texted back ‘reset’, the readings would reset, allowing for the next round of collection. My microcontroller shorted, so I had to spend time rewiring the input/output from scratch, with a lot of help from Bobby and Kassia. Below are photos of the new setup, along with the code (To see functionality, see final video):    
+    </h5>
+
+  <img src="IMG_20250808_161421657.jpg" alt="Image 1" style="max-width: 45.2%; height: auto;">
+  <img src="IMG_20250808_162402233_HDR.jpg" style="max-width: 45.2%; height: auto;"><br>
+
+  </div>
+</div><br>
+
+
+<h4 style="text-align:center"><u>Conclusion and reflection</u></h4><br>
+
+<h5>
+There were many hurdles I faced during this project, and several issues that I hope to tackle when developing this project in the future. With regards to the conveyor, I wish I had created a chassis out of scrap wood to add stability, and tightened the belt using a take up pulley. I wish I had avoided using 3d printed bits for the wheel ad conveyor, as it would hamper accessibility in India if I were to open-source the design. I wsh I had done everything differet with the rake system. Lastly, I wish I had integrated all the compoents better, ad tested out the wheel on the water of the Charles River. For nnow, I’ve taken home whatever parts I could, and I hope to build and improve on this in the next couple of months.
+</h5><br>
+
+<h5>
+All in all, I had an extremely fun time during the final project week, and digital fabrication as a whole. Having people walk in and see the final projects was incredible fulfilling. I truly wish we had more time together; however, I’m incredible grateful and happy about the time we did have :)
+</h5>
 
 </div>
-</xmp>
+  </xmp>
 </body>
 
 <script src="../strapdown.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" ></script>
-
-</html>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
