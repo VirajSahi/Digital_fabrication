@@ -194,6 +194,187 @@ During the final week, I attempted to prototype the reverse system by building t
   <img src="IMG_20250808_161421657.jpg" alt="Image 1" style="max-width: 45.2%; height: auto;">
   <img src="IMG_20250808_162402233_HDR.jpg" style="max-width: 45.2%; height: auto;"><br>
 
+  <pre><code>
+    #include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#include "HX711.h"
+#include <HardwareSerial.h>
+
+// === OLED setup ===
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+#define OLED_RESET -1
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+// === I2C pins ===
+#define I2C_SDA 8
+#define I2C_SCL 9
+
+// === Ultrasonic sensor pins ===
+const int trigPin = 19;
+const int echoPin = 18;
+
+// === Load cell pins and calibration ===
+#define DOUT 4
+#define CLK 5
+#define CALIBRATION_FACTOR -19040.00
+HX711 scale;
+
+// === SIM800L (Serial1) ===
+#define SIM800L_RX 20
+#define SIM800L_TX 21
+HardwareSerial sim800l(1); // use Serial1
+const String phoneNumber = "+14243619005";
+
+// === State and timing ===
+unsigned long previousMillis = 0;
+const unsigned long interval = 1000;
+
+bool alerted70 = false;
+bool alerted80 = false;
+bool alerted90 = false;
+bool locked = false;
+
+void sendSMS(String message);
+
+void setup() {
+  Serial.begin(9600);
+
+  // OLED
+  Wire.begin(I2C_SDA, I2C_SCL);
+  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+    Serial.println(F("OLED initialization failed"));
+    while (true);
+  }
+  showMessage("System Ready");
+
+  // Ultrasonic
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  // Load cell
+  scale.begin(DOUT, CLK);
+  scale.set_scale(CALIBRATION_FACTOR);
+  delay(2000);
+  scale.tare();
+
+  // SIM800L
+  sim800l.begin(9600, SERIAL_8N1, SIM800L_RX, SIM800L_TX);
+  delay(1000);
+  sendSMS("Bin monitor active");
+}
+
+void loop() {
+  checkSMS();
+
+  if (Serial.available()) {
+    String input = Serial.readStringUntil('\n');
+    input.trim();
+    if (input.equalsIgnoreCase("reset")) {
+      resetSystem();
+    }
+  }
+
+  unsigned long currentMillis = millis();
+  if (currentMillis - previousMillis >= interval && !locked) {
+    previousMillis = currentMillis;
+
+    // --- Measure distance ---
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(2);
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
+    float duration = pulseIn(echoPin, HIGH);
+    float distance = (duration * 0.0343) / 2;
+
+    // --- Measure weight ---
+    float weight = scale.get_units();
+
+    // --- Alerts ---
+if ((distance <= 7.6 || weight >= 9.0) && !alerted90) {
+  showMessage("Bin 90% full");
+  sendSMS("ALERT: Riverse bin is 90% FULL! Please empty ASAP!");
+  alerted90 = true;
+  locked = true;
+} else if ((distance <= 15.2 || weight >= 8.0) && !alerted80) {
+  showMessage("Bin 80% full");
+  sendSMS("ALERT: Riverse bin is 80% full. Please empty.");
+  alerted80 = true;
+} else if ((distance <= 22.8 || weight >= 7.0) && !alerted70) {
+  showMessage("Bin 70% full");
+  sendSMS("ALERT: Riverse bin is 70% full. Please empty.");
+  alerted70 = true;
+}
+
+    // Debug
+    Serial.print("Distance: ");
+    Serial.print(distance);
+    Serial.print(" cm | Weight: ");
+    Serial.print(weight, 2);
+    Serial.println(" kg");
+  }
+}
+
+// === OLED Message ===
+void showMessage(const char* msg) {
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setCursor(0, 0);
+  display.setTextColor(SSD1306_WHITE);
+  display.println(msg);
+  display.display();
+}
+
+// === Reset system state ===
+void resetSystem() {
+  alerted70 = false;
+  alerted80 = false;
+  alerted90 = false;
+  locked = false;
+  scale.tare();
+  showMessage("System reset.");
+  Serial.println("System reset.");
+}
+
+void checkSMS() {
+  if (sim800l.available()) {
+    String response = sim800l.readString();
+
+    Serial.println("SMS Received:");
+    Serial.println(response);
+
+    response.toLowerCase();
+    if (response.indexOf("reset") >= 0) {
+      resetSystem();
+      sendSMS("✅ Bin system reset remotely.");
+    }
+  }
+}
+
+// === Send SMS ===
+void sendSMS(String message) {
+  sim800l.println("AT+CMGF=1");
+  delay(500);
+
+  sim800l.print("AT+CMGS=\"");
+  sim800l.print(phoneNumber);
+  sim800l.println("\"");
+  delay(500);
+
+  sim800l.print(message);
+  delay(500);
+
+  sim800l.write(26); // CTRL+Z to send
+  delay(3000);
+
+  Serial.println("SMS sent: " + message);
+}
+
+  </code>
+</pre>
+
   </div>
 </div><br>
 
