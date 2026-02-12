@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Very Important Question</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #DE3163;
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        img {
+            margin-top: 8vh;
+            width: 600px;
+            border-radius: 20px;
+        }
+
+        h1 {
+            margin-top: 5vh;
+            font-size: 3em;
+        }
+
+        h2 {
+            font-weight: normal;
+        }
+
+        .buttons {
+            margin-top: 40px;
+        }
+
+        button {
+            padding: 15px 35px;
+            font-size: 20px;
+            border: none;
+            border-radius: 12px;
+            margin: 20px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        #yesBtn {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        #yesBtn:hover {
+            transform: scale(1.1);
+        }
+
+        #noBtn {
+            background-color: #ff4d4d;
+            color: white;
+            position: absolute;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #celebration {
+            margin-top: 15vh;
+        }
+
+        #ticket {
+            background: white;
+            color: black;
+            padding: 30px;
+            border-radius: 20px;
+            width: 300px;
+            margin: 30px auto;
+            transform: scale(0);
+            transition: 0.5s;
+        }
+
+        #ticket.show {
+            transform: scale(1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- First Page Content -->
+    <img src="PromposalPic.png" alt="Promposal Image">
+
+    <h2>Will you go to prom with me?</h2>
+
+    <div class="buttons">
+        <button id="yesBtn">YES</button>
+        <button id="noBtn">No</button>
+    </div>
+
+    <!-- Second Page -->
+    <div id="celebration" class="hidden">
+        <h1>LESSGOOOOOO!! :)</h1>
+        <button id="ticketBtn">Reveal Your Prom Ticket</button>
+
+        <div id="ticket">
+            <h2>Prom 2026</h2>
+            <p>Admit Two (Maybe 3?)</p>
+            <p><strong>You + Me (+ Christopher?)</strong></p>
+            <p>Dress Code: Skinny Jeaannnzzzzzz</p>
+        </div>
+    </div>
+
+    <!-- 🎵 Background Music -->
+    <audio id="bgMusic" preload="auto">
+        <source src="FDOML.mp3" type="audio/mpeg">
+    </audio>
+
+<script>
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+    const celebration = document.getElementById("celebration");
+    const ticketBtn = document.getElementById("ticketBtn");
+    const ticket = document.getElementById("ticket");
+    const bgMusic = document.getElementById("bgMusic");
+
+    // Make NO button run away
+    document.addEventListener("mousemove", function(e) {
+        const rect = noBtn.getBoundingClientRect();
+        const distance = Math.hypot(
+            e.clientX - (rect.left + rect.width/2),
+            e.clientY - (rect.top + rect.height/2)
+        );
+
+        if (distance < 100) {
+            const newX = Math.random() * (window.innerWidth - 100);
+            const newY = Math.random() * (window.innerHeight - 50);
+            noBtn.style.left = newX + "px";
+            noBtn.style.top = newY + "px";
+        }
+    });
+
+    // YES click
+    yesBtn.addEventListener("click", function() {
+        document.querySelector(".buttons").classList.add("hidden");
+        document.querySelector("h2").classList.add("hidden");
+        document.querySelector("img").classList.add("hidden");
+        celebration.classList.remove("hidden");
+
+        bgMusic.currentTime = 0;
+        bgMusic.play().catch(function(error){
+            console.log("Playback failed:", error);
+        });
+
+        launchConfetti();
+    });
+
+    // Reveal ticket
+    ticketBtn.addEventListener("click", function() {
+        ticket.classList.add("show");
+    });
+
+    // Confetti
+    function launchConfetti() {
+        for (let i = 0; i < 150; i++) {
+            let confetti = document.createElement("div");
+            confetti.style.position = "absolute";
+            confetti.style.width = "8px";
+            confetti.style.height = "8px";
+            confetti.style.backgroundColor =
+                "hsl(" + Math.random() * 360 + ", 100%, 50%)";
+            confetti.style.left = Math.random() * window.innerWidth + "px";
+            confetti.style.top = "-10px";
+
+            document.body.appendChild(confetti);
+
+            let fall = setInterval(() => {
+                let top = parseFloat(confetti.style.top);
+                confetti.style.top = top + 5 + "px";
+                if (top > window.innerHeight) {
+                    clearInterval(fall);
+                    confetti.remove();
+                }
+            }, 20);
+        }
+    }
+</script>
+
+</body>
+</html>
